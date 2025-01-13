@@ -28,12 +28,26 @@ jobs:
         export VERSION=$(grep -oP '"version":\s*"\K[0-9\.]+' package.json)
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-    # Build the Docker Image
     - name: Build Docker Image
       run: |
         docker build . -t hishmath/nest-demo-service-a:${{ env.VERSION }}
 
-    # Push the Docker Image
     - name: Push Docker Image
       run: |
         docker push hishmath/nest-demo-service-a:${{ env.VERSION }}
+
+    # UPdate the K8s Manifest Files
+    - name: Update K8s Manifests
+      run: |
+        cat deployment/deploy.yaml
+        sed -i "s|image: hishmath/nest-demo-service-a:.*|image: hishmath/nest-demo-service-a:${{ env.VERSION }}|g" deployment/deploy.yaml
+        cat deployment/deploy.yaml
+      # Update Github
+    - name: Commit the changes
+      run: |
+        git config --global user.email "<>"
+        git config --global user.name "GitHub Actions Bot"
+        git add deployment/deploy.yaml
+        git commit -m "Update deploy.yaml with new image version - ${{ env.VERSION }}"
+        git remote set-url origin https://github-actions:${{ secrets.GH_TOKEN }}github.com/Hishmathdeen/nest-demo-service-a
+        git push origin main
