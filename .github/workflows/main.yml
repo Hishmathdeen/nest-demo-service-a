@@ -40,13 +40,6 @@ jobs:
       run: |
         sed -i "s|image: hishmath/nest-demo-service-a:.*|image: hishmath/nest-demo-service-a:${{ env.VERSION }}|g" deployment/deploy.yaml
 
-    - name: Update the package json
-      uses: actions/setup-node@v2
-
-    - name: update package json
-      run: |
-        npm version minor
-
     - name: Commit the changes of deployment file
       run: |
         git config --global user.email "<mailtohdeen@gmail.com>"
