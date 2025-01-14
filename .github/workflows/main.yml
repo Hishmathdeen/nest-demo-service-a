@@ -38,13 +38,18 @@ jobs:
 
     - name: Update K8s Manifests
       run: |
+        npm version minor
         sed -i "s|image: hishmath/nest-demo-service-a:.*|image: hishmath/nest-demo-service-a:${{ env.VERSION }}|g" deployment/deploy.yaml
 
-    - name: Commit the changes
+    - name: Update package version
+      run: |
+        npm version minor
+
+    - name: Commit the changes of deployment file
       run: |
         git config --global user.email "<mailtohdeen@gmail.com>"
         git config --global user.name "GitHub Actions Bot"
-        git add deployment/deploy.yaml
+        git add *
         git commit -m "Update deploy.yaml with new image version - ${{ env.VERSION }}"
         git remote set-url origin https://github-actions:${{ secrets.GH_TOKEN }}@github.com/Hishmathdeen/nest-demo-service-a.git
         git push origin main
