@@ -38,10 +38,14 @@ jobs:
 
     - name: Update K8s Manifests
       run: |
-        npm version minor
         sed -i "s|image: hishmath/nest-demo-service-a:.*|image: hishmath/nest-demo-service-a:${{ env.VERSION }}|g" deployment/deploy.yaml
 
     - name: Update package version
+      run: |
+        npm version minor
+
+    - name: Update the package json
+      uses: actions/setup-node@v2
       run: |
         npm version minor
 
