@@ -20,7 +20,7 @@ export class AppService {
 
   async productService() {
     this.logger.log('product service triggered from the controller');
-    const response = await axios.get('http://localhost:3001/cart-service-b')
+    const response = await axios.get('http://service-b-demo.demo-namespace-b.svc.cluster.local:3000/service-b/cart-service-b')
     this.logger.log(`Respose Recieved from the Service B is ${JSON.stringify(response.data)}`);
     return 'Respone from the product Serive';
   }
