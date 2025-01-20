@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { AppService } from './app.service';
 
-@Controller()
+@Controller('service-a')
 export class AppController {
   private readonly logger = new Logger('A-CONTROLLER');
 
