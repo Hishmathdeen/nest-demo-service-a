@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GIT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Environment setup
         run: |
