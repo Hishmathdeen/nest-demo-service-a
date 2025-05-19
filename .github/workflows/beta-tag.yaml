@@ -22,3 +22,10 @@ jobs:
         run: |
           BASE_TAG=${{  github.ref_name }}
           echo "Base tag $BASE_TAG exists."
+
+      - name: rename tag
+        run: |
+          git tag ${{  github.ref_name }}-beta ${{  github.ref_name }}
+          git show ${{  github.ref_name }}-beta
+          git tag -d ${{  github.ref_name }}
+          git push origin  ${{  github.ref_name }}-beta :${{  github.ref_name }}
