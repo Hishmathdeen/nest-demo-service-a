@@ -1,4 +1,4 @@
-name: CI CD Workflow
+name: beta tag
 
 on:
   workflow_dispatch:
