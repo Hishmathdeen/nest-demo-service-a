@@ -3,7 +3,7 @@ name: Service A CI Pipeline
 on:
   push:
     branches:
-    - main
+    - main1
 
 jobs:
   deploy:
