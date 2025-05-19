@@ -25,7 +25,7 @@ async function bootstrap() {
     }),
   });
 
-  await app.listen(3000);
+  await app.listen(3001);
   Logger.log('Service A is running on port 3000');
 }
 
