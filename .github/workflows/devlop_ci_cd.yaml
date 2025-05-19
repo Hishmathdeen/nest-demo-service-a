@@ -1,0 +1,72 @@
+name: CI CD Workflow
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  create_tag_release:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Environment setup
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "Setting environment to Production"
+            echo "ENVIRONMENT=preprod" >> $GITHUB_ENV
+            echo "prerelease=false" >> $GITHUB_ENV
+          elif [ "${{ github.ref }}" = "refs/heads/develop" ]; then
+            echo "Setting environment to Development"
+            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+            echo "prerelease=true" >> $GITHUB_ENV
+          fi
+
+      - name: Install Dependencies
+        run: |
+          npm install || { echo "npm install failed"; exit 1; }
+
+      - name: Build Application
+        run: |
+          npm run build || { echo "npm build failed"; exit 1; }
+
+      - name: Deploy to Environment
+        run: |
+          echo "Deploying to ${{ env.ENVIRONMENT }}..."
+
+      - name: Get npm version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
+      - name: Check if Tag Exists
+        run: |
+          if git rev-parse v${{ steps.package-version.outputs.current-version}} >/dev/null 2>&1; then
+            echo "Tag v${{ steps.package-version.outputs.current-version}} already exists!"
+            exit 1
+          fi
+
+      - name: Create Tag
+        id: create_tag
+        run: |
+          git tag v${{ steps.package-version.outputs.current-version}}
+          git push origin v${{ steps.package-version.outputs.current-version}}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+        with:
+          tag_name: v${{ steps.package-version.outputs.current-version}}
+          name: Release v${{ steps.package-version.outputs.current-version}}
+          body: |
+            Release created automatically by GitHub Actions.
+          draft: false
+          prerelease: ${{ env.prerelease }}
