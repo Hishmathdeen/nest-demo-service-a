@@ -48,6 +48,7 @@ jobs:
 
       - name: Check if Tag Exists
         run: |
+          git fetch --tags origin
           if git rev-parse v${{ steps.package-version.outputs.current-version}} >/dev/null 2>&1; then
             echo "Tag v${{ steps.package-version.outputs.current-version}} already exists!"
             exit 1
