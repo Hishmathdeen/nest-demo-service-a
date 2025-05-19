@@ -1,13 +1,7 @@
-name: beta tag
+name: CI CD Workflow
 
 on:
   workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Tag to base the beta on (e.g., v1.0.0)'
-        required: true
-        type: string
-
 
 permissions:
   contents: write
@@ -20,35 +14,16 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v4
-        ref: ${{ github.event.inputs.tag }}
-
-      - name: Set up Git
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
 
       - name: Fetch tags
         run: git fetch --tags origin
 
       - name: Create beta tag
         run: |
-          BASE_TAG=${{ github.event.inputs.tag }}
-          BETA_TAG="${BASE_TAG}-beta"
+          BASE_TAG=${{  github.ref_name }}
+          echo "Base tag $BASE_TAG exists."
 
-          # Check if base tag exists
-          if git rev-parse "$BASE_TAG" >/dev/null 2>&1; then
-            echo "Base tag $BASE_TAG exists."
-          else
-            echo "❌ Tag $BASE_TAG does not exist!"
-            exit 1
-          fi
-
-          # Check if beta tag already exists
-          if git rev-parse "$BETA_TAG" >/dev/null 2>&1; then
-            echo "❌ Tag $BETA_TAG already exists!"
-            exit 1
-          fi
-
-          # Create new beta tag from the base tag
-          git tag "$BETA_TAG" "$BASE_TAG"
-          git push origin "$BETA_TAG"
+          git tag ${{  github.ref_name }}-beta ${{  github.ref_name }}
+          git show ${{  github.ref_name }}-beta
+          git tag -d ${{  github.ref_name }}
+          git push origin  ${{  github.ref_name }}-beta :${{  github.ref_name }}
