@@ -23,14 +23,14 @@ jobs:
         uses: paper2/github-actions-opentelemetry@main
         env:
           OTEL_SERVICE_NAME: github-actions-opentelemetry
-          OTEL_EXPORTER_OTLP_ENDPOINT: https://tempo-prod-14-prod-ap-southeast-1.grafana.net:443
+          OTEL_EXPORTER_OTLP_ENDPOINT: https://otlp-gateway-prod-ap-southeast-1.grafana.net/otlp
           # Additional OTLP headers. Useful for OTLP authentication.
           # e.g.
           # New Relic: api-key=YOUR_NEWRELIC_API_KEY
           # Google Cloud Run: Authorization=Bearer <value of $(gcloud auth print-identity-token)>
           # Basic Authentication: Authorization=Basic <base64-encoded value of userid:password>
           OTEL_EXPORTER_OTLP_HEADERS:
-            Authorization=Basic MTQyMTA0ODpnbGNfZXlKdklqb2lNVFl4TnpNMk1pSXNJbTRpT2lKemRHRmpheTB4TkRZNE9UUTFMV2gwTFhKbFlXUXRkR1Z0Y0c5dlpYSmxjbVZsTFhSbGJYQnZiMlZ5WlhKbFpTSXNJbXNpT2lJd09EQmtNemc1YTJkT2JWVXhlRFkwY2twak9FeEhUWEVpTENKdElqcDdJbklpT2lKd2NtOWtMV0Z3TFhOdmRYUm9aV0Z6ZEMweEluMTkK,other-config-value=value
+            Authorization=Basic MTQ2ODk0NTpnbGNfZXlKdklqb2lNVFl4TnpNMk1pSXNJbTRpT2lKemRHRmpheTB4TkRZNE9UUTFMVzkwYkhBdGQzSnBkR1V0WjJsMGFIVmlZV04wYVc5dWN5SXNJbXNpT2lKSGREYzJhRFk0U1V3eE9YTTVTVWhsTlVOSFlUVndTVFlpTENKdElqcDdJbklpT2lKd2NtOWtMV0Z3TFhOdmRYUm9aV0Z6ZEMweEluMTk=,other-config-value=value
           OTEL_RESOURCE_ATTRIBUTES: 'environment=ci,team=backend'
         with:
           # Required for collecting workflow data
