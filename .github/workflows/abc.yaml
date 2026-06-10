@@ -23,7 +23,7 @@ jobs:
         uses: paper2/github-actions-opentelemetry@main
         env:
           OTEL_SERVICE_NAME: github-actions-opentelemetry
-          OTEL_EXPORTER_OTLP_ENDPOINT: https://tempo-prod-14-prod-ap-southeast-1.grafana.net/tempo
+          OTEL_EXPORTER_OTLP_ENDPOINT: https://tempo-prod-14-prod-ap-southeast-1.grafana.net:443
           # Additional OTLP headers. Useful for OTLP authentication.
           # e.g.
           # New Relic: api-key=YOUR_NEWRELIC_API_KEY
